@@ -99,6 +99,12 @@ class TDWE(object):
                 "Type": resp["StatusType"],
                 "Message": resp["StatusMessage"]}
 
+    def parse_fields(self, record):
+        status = self.status(record)
+        if status["Code"] != STATUS_CODE_OK:
+            raise AttributeError(status)
+        fields = dict((f["Name"], self._get_value(f)) for f in record["Fields"]["Field"])
+
     def parse_record_to_dataframe(self, record):
         status = self.status(record)
         if status["Code"] != STATUS_CODE_OK:
